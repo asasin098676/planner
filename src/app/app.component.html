@@ -1,0 +1,53 @@
+<script src="https://console.firebase.google.com/project/romanprogect/overview"></script>
+
+<mat-tab-group
+  [selectedIndex]="days.indexOf(currentDay)"
+  (selectedTabChange)="selectedTabValue($event)"
+>
+  <mat-tab *ngFor="let day of days" label="{{ day }}"></mat-tab>
+</mat-tab-group>
+
+<div class="input">
+  <form class="sel" [formGroup]="todoItemFormGroup">
+    <input
+      class="todo-text"
+      placeholder="додати нове задання"
+      type="text"
+      [formControl]="todoItemFormGroup.controls.todoValue"
+    />
+
+    <input
+      class="time"
+      [formControl]="todoItemFormGroup.controls.time"
+      type="time"
+      theme="dark"
+      atp-time-picker
+    />
+
+    <button
+      mat-button
+      class="addButton"
+      (click)="
+        add(
+          $any(todoItemFormGroup.controls.todoValue.value),
+          $any(todoItemFormGroup.controls.time.value)
+        )
+      "
+      [disabled]="
+        todoItemFormGroup.controls.todoValue.invalid ||
+        todoItemFormGroup.controls.time.invalid
+      "
+    >
+      add New
+    </button>
+  </form>
+
+  <div class="calendarList">
+    <mat-card style="width: 97%" *ngFor="let el of todos">
+      <div class="divDates">
+        <p>{{ el.clock }}</p>
+        <p>{{ el.name }}</p>
+      </div>
+    </mat-card>
+  </div>
+</div>
