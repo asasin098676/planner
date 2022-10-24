@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FireService } from './fire.service';
 import * as moment from 'moment';
+import { take } from 'rxjs';
 
 export interface Todo {
   name: string;
@@ -39,18 +40,17 @@ export class AppComponent {
 
   public selectedTabValue(event: any): void {
     this.currentDay = event.tab.textLabel;
-    this.todos.splice(0);
-    this.fireService.loadTodosByDay(this.currentDay).subscribe((todos) => {
-      for (let i = 0; i <= todos.length; i++) {
-        this.todos.push({
-          name: todos[i].name,
-          clock: todos[i].clock,
-          id: todos[i].id,
-          day: todos[i].day,
-          date: todos[i].date,
-        });
-      }
-    });
+    // Use empty array instead of this
+    this.todos = [];
+
+    // don't forgeet to unsubsribe from observable
+    this.fireService
+      .loadTodosByDay(this.currentDay)
+      .pipe(take(1))
+      .subscribe((todos) => {
+        // you can just assign todos that you recieve from subscribe
+        this.todos = todos;
+      });
   }
 
   constructor(public fireService: FireService) {}
