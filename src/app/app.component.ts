@@ -1,7 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { HttpService } from './server/http.service';
 import { FireService } from './fire.service';
 import * as moment from 'moment';
 
@@ -18,7 +16,6 @@ export interface Todo {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   encapsulation: ViewEncapsulation.None,
-  providers: [HttpService],
 })
 export class AppComponent implements OnInit {
   public labelName: string = '';
