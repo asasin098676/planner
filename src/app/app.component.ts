@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FireService } from './fire.service';
 import * as moment from 'moment';
@@ -17,9 +17,7 @@ export interface Todo {
   styleUrls: ['./app.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class AppComponent implements OnInit {
-  public labelName: string = '';
-  public dayOfWeek: string = '';
+export class AppComponent {
   public days: string[] = [
     'Monday',
     'Tuesday',
@@ -29,18 +27,17 @@ export class AppComponent implements OnInit {
     'Saturday',
     'Sunday',
   ];
-
   public dateMom = moment().format('D MMM YYYY');
   public currentDay = moment().format('dddd');
+  public todos: Todo[] = [];
 
-  todos: Todo[] = [];
   public todoItemFormGroup = new FormGroup({
     dayOfWeek: new FormControl<string>(''),
     time: new FormControl<string>('', [Validators.required]),
     todoValue: new FormControl<string>('', [Validators.required]),
   });
 
-  selectedTabValue(event: any): void {
+  public selectedTabValue(event: any): void {
     this.currentDay = event.tab.textLabel;
     this.todos.splice(0);
     this.fireService.loadTodosByDay(this.currentDay).subscribe((todos) => {
@@ -75,11 +72,9 @@ export class AppComponent implements OnInit {
     this.todos.sort((a, b) => (a.id > b.id ? 1 : -1));
   }
 
-  remove(task: Todo) {
+  public remove(task: Todo): void {
     this.fireService.remove(task).subscribe(() => {
       this.todos = this.todos.filter((t) => t.id !== task.id);
     });
   }
-
-  ngOnInit(): void {}
 }
