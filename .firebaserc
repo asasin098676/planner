@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "romanprogect": {
+      "hosting": {
+        "calendar": [
+          "romanprogect"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "romanprogect"
+  }
+}

@@ -1,8 +1,11 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { HttpService } from './server/http.service';
+import { FireService } from './fire.service';
 import * as moment from 'moment';
 
-interface Todo {
+export interface Todo {
   name: string;
   clock: string;
   id: string;
@@ -15,9 +18,11 @@ interface Todo {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   encapsulation: ViewEncapsulation.None,
+  providers: [HttpService],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   public labelName: string = '';
+  public dayOfWeek: string = '';
   public days: string[] = [
     'Monday',
     'Tuesday',
@@ -30,7 +35,8 @@ export class AppComponent {
 
   public dateMom = moment().format('D MMM YYYY');
   public currentDay = moment().format('dddd');
-  public todos: Todo[] = [];
+
+  todos: Todo[] = [];
   public todoItemFormGroup = new FormGroup({
     dayOfWeek: new FormControl<string>(''),
     time: new FormControl<string>('', [Validators.required]),
@@ -39,19 +45,43 @@ export class AppComponent {
 
   selectedTabValue(event: any): void {
     this.currentDay = event.tab.textLabel;
+    this.todos.splice(0);
+    this.fireService.loadTodosByDay(this.currentDay).subscribe((todos) => {
+      for (let i = 0; i <= todos.length; i++) {
+        this.todos.push({
+          name: todos[i].name,
+          clock: todos[i].clock,
+          id: todos[i].id,
+          day: todos[i].day,
+          date: todos[i].date,
+        });
+      }
+    });
   }
+
+  constructor(public fireService: FireService) {}
 
   public add(name: string, clock: string): void {
     this.todos.push({
       name: name,
       clock: clock.slice(0, 5),
-      id: clock[0] + clock[1] + clock[3] + clock[4],
+      id: '2342324',
       day: this.currentDay,
       date: this.dateMom,
     });
-    console.log(this.todos);
+
+    this.fireService
+      .create(this.todos, this.currentDay)
+      .subscribe((todos) => {});
+
     this.todoItemFormGroup.reset();
     this.todos.sort((a, b) => (a.id > b.id ? 1 : -1));
+  }
+
+  remove(task: Todo) {
+    this.fireService.remove(task).subscribe(() => {
+      this.todos = this.todos.filter((t) => t.id !== task.id);
+    });
   }
 
   ngOnInit(): void {}

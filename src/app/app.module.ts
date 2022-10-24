@@ -10,6 +10,12 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
+import { provideFirebaseApp } from '@angular/fire/app';
+import { environment } from '../environments/environment';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideDatabase, getDatabase } from '@angular/fire/database';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { HttpClientModule } from '@angular/common/http';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDK1vKBUJ6YwyEmIF4jXi1tfvkklUKm64w',
@@ -26,6 +32,7 @@ const analytics = getAnalytics(app);
 @NgModule({
   declarations: [AppComponent],
   imports: [
+    HttpClientModule,
     MatButtonModule,
     MatCardModule,
     BrowserModule,
@@ -34,6 +41,11 @@ const analytics = getAnalytics(app);
     ReactiveFormsModule,
     MatTabsModule,
     MatSliderModule,
+    HttpClientModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideDatabase(() => getDatabase()),
+    provideFirestore(() => getFirestore()),
   ],
   providers: [],
   bootstrap: [AppComponent],

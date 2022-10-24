@@ -1,5 +1,3 @@
-<script src="https://console.firebase.google.com/project/romanprogect/overview"></script>
-
 <mat-tab-group
   [selectedIndex]="days.indexOf(currentDay)"
   (selectedTabChange)="selectedTabValue($event)"
@@ -47,6 +45,7 @@
       <div class="divDates">
         <p>{{ el.clock }}</p>
         <p>{{ el.name }}</p>
+        <button class="delBut" (click)="remove(el)">delate</button>
       </div>
     </mat-card>
   </div>
